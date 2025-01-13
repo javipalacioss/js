@@ -5,6 +5,5 @@ function saludaConsola() {
 function saludaUsuario() {
     alert("Hola usuario");
 }
-
 saludaConsola();
 saludaUsuario();
