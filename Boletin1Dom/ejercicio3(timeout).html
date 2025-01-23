@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio 3</title>
+
+    <script>
+      var nuevaVentana;
+
+      function abrirUrl() {
+        // Abrir una nueva ventana
+        nuevaVentana = window.open("https://www.marca.com");
+      }
+
+      function cerrarUrl() {
+        // Cerrar la ventana abierta
+        if (nuevaVentana) {
+          nuevaVentana.close();
+        } else {
+          console.log("No se ha abierto ninguna ventana.");
+        }
+      }
+
+      // Llamar a abrirUrl después de 5 segundos
+      setTimeout(abrirUrl, 5000);
+
+      // Llamar a cerrarUrl después de 10 segundos
+      setTimeout(cerrarUrl, 10000);
+    </script>
+  </head>
+  <body></body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio 3</title>
+
+    <script>
+      var nuevaVentana;
+
+      function abrirUrl() {
+        // Abrir la ventana
+        nuevaVentana = window.open("https://www.marca.com");
+      }
+
+      function cerrarUrl() {
+        // Cerrar la ventana
+        if (nuevaVentana && !nuevaVentana.closed) {
+          nuevaVentana.close();
+        }
+      }
+
+      // Usamos setInterval para abrir la URL después de 5 segundos (ejecutar una vez)
+      setTimeout(function() {
+        abrirUrl();
+      }, 5000);  // Se ejecuta después de 5 segundos
+
+      // Usamos setTimeout para cerrar la URL después de 10 segundos
+      setTimeout(function() {
+        cerrarUrl();
+      }, 10000);  // Se ejecuta después de 10 segundos
+    </script>
+  </head>
+  <body></body>
+</html>
