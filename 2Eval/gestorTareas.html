@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Tareas</title>
+    <style>
+      /* Estilos para la lista y los botones */
+      li {
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+
+      button {
+        margin-left: 10px;
+        padding: 5px;
+      }
+
+      /* Estilo para las tareas completadas */
+      .completada {
+        text-decoration: line-through;
+        color: grey;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lista de Tareas</h1>
+
+    <!-- Formulario para añadir una nueva tarea -->
+    <form>
+      <input type="text" id="entradaTarea" placeholder="Añadir tarea" required />
+      <button type="button" onclick="agregarTarea()">Añadir</button>
+    </form>
+
+    <!-- Lista donde se agregarán las tareas -->
+    <ul id="listaTareas"></ul>
+
+    <!-- Botón para eliminar tareas completadas -->
+    <button onclick="eliminarTareasCompletadas()">Eliminar tareas completadas</button>
+    
+    <!-- Input para escribir el nombre de la tarea a eliminar -->
+    <input type="text" id="entradaEliminar" placeholder="Tarea completada a eliminar..." required />
+
+    <script>
+      // Obtiene la referencia a la lista de tareas
+      let listaTareas = document.getElementById("listaTareas");
+      let contador = 0; // Contador para numerar las tareas
+
+      // Función para agregar una nueva tarea a la lista
+      function agregarTarea() {
+        let nuevaTarea = document.getElementById("entradaTarea");
+        if (nuevaTarea.value.trim() === "") return; // Evita añadir tareas vacías
+
+        let tareaElemento = document.createElement("li"); // Crea un nuevo elemento de lista
+        
+        // Asigna el número de tarea junto con el texto ingresado
+        tareaElemento.textContent = `${contador} ${nuevaTarea.value}`;
+        tareaElemento.setAttribute("data-id", contador); // Añade un identificador único a la tarea
+        
+        // Permite marcar o desmarcar la tarea como completada al hacer clic
+        tareaElemento.addEventListener("click", () => {
+          tareaElemento.classList.toggle("completada");
+        });
+
+        listaTareas.appendChild(tareaElemento); // Agrega la tarea a la lista
+        nuevaTarea.value = ""; // Limpia el campo de entrada
+        contador++; // Incrementa el contador para la próxima tarea
+      }
+
+      // Función para eliminar una tarea completada ingresando su nombre en el input
+      function eliminarTareasCompletadas() {
+        let entradaEliminar = document.getElementById("entradaEliminar").value.trim();
+        if (entradaEliminar === "") return; // No hacer nada si el input está vacío
+
+        let tareas = Array.from(listaTareas.getElementsByTagName("li")); // Obtiene todas las tareas
+        
+        // Busca la tarea completada que coincida con el texto ingresado
+        let tareaAEliminar = tareas.find(tarea => tarea.classList.contains("completada") && tarea.textContent.includes(entradaEliminar));
+
+        if (tareaAEliminar) {
+          tareaAEliminar.remove(); // Elimina la tarea encontrada
+        } else {
+          alert("Tarea completada no encontrada"); // Mensaje de error si no se encuentra
+        }
+      }
+    </script>
+  </body>
+</html>
