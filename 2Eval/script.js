@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (texto === "") return;
 
-        tareas.push({ text: texto, completed: false });
+        tareas.push({ text: texto, completada: false });
         inputTarea.value = "";
 
         //funcion para cargar tareas(completar)
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //marcar como completada
     function marcarCompletada(index) {
-        tareas[index].completed = !tareas[index].completed; 
+        tareas[index].completed = !tareas[index].completada; 
         cargarTareas();
     }
 
