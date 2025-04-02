@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Viaje</title>
+    <style>
+        /* Estilos básicos para la disposición de los destinos y la ruta */
+        .destino, .ruta {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            width: 30%;
+        }
+        #ruta {
+            margin-left: 40%;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .boton-eliminar {
+            margin-top: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Calculadora de Viaje</h1>
+
+    <div id="destinos">
+        <!-- Aquí se cargarán los destinos disponibles -->
+    </div>
+
+    <div id="ruta">
+        <h2>Mi Itinerario</h2>
+        <div id="detallesRuta">
+            <!-- Detalles de la ruta (destinos seleccionados) aparecerán aquí -->
+        </div>
+        <p>Total días: <span id="totalDias">0</span></p>
+        <p>Total coste: <span id="totalCoste">0 €</span></p>
+    </div>
+
+    <script>
+        // Lista de provincias con sus respectivos costos y las imágenes asociadas
+        const provincias = [
+            {
+                id: 1,
+                nombre: 'Almería',
+                coste_alojamiento: 12,
+                coste_alimentacion: 22,
+                imagen: 'almeria.jpg'
+            },
+            {
+                id: 2,
+                nombre: 'Granada',
+                coste_alojamiento: 143.2,
+                coste_alimentacion: 22,
+                imagen: 'granada.jpg'
+            },
+            {
+                id: 3,
+                nombre: 'Cádiz',
+                coste_alojamiento: 50,
+                coste_alimentacion: 25,
+                imagen: 'cadiz.jpg'
+            },
+            {
+                id: 4,
+                nombre: 'Jaén',
+                coste_alojamiento: 40,
+                coste_alimentacion: 20,
+                imagen: 'jaen.jpg'
+            },
+            {
+                id: 5,
+                nombre: 'Málaga',
+                coste_alojamiento: 70,
+                coste_alimentacion: 30,
+                imagen: 'malaga.jpg'
+            },
+            {
+                id: 6,
+                nombre: 'Sevilla',
+                coste_alojamiento: 100,
+                coste_alimentacion: 35,
+                imagen: 'sevilla.jpg'
+            },
+            {
+                id: 7,
+                nombre: 'Huelva',
+                coste_alojamiento: 55,
+                coste_alimentacion: 23,
+                imagen: 'huelva.jpg'
+            },
+            {
+                id: 8,
+                nombre: 'Córdoba',
+                coste_alojamiento: 60,
+                coste_alimentacion: 28,
+                imagen: 'cordoba.jpg'
+            }
+        ];
+
+        // Al cargar la página, ejecutar la función para cargar los destinos y la ruta guardada
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarDestinos();
+            cargarRuta();
+        });
+
+        // Función para cargar los destinos disponibles en la parte izquierda de la página
+        function cargarDestinos() {
+            const destinosDiv = document.getElementById('destinos');
+            destinosDiv.innerHTML = ''; // Limpiamos los destinos antes de mostrar
+
+            // Iterar sobre las provincias para crear el HTML de cada destino
+            provincias.forEach(provincia => {
+                const destinoDiv = document.createElement('div');
+                destinoDiv.classList.add('destino'); // Añadimos clase para el estilo
+
+                // Agregar contenido dinámicamente para cada destino
+                destinoDiv.innerHTML = `
+                    <img src="${provincia.imagen}" alt="${provincia.nombre}" width="100%">
+                    <h3>${provincia.nombre}</h3>
+                    <p>Alojamiento: ${provincia.coste_alojamiento} € / noche</p>
+                    <p>Alimentación: ${provincia.coste_alimentacion} € / día</p>
+                    <button onclick="añadirDestino(${provincia.id})">Añadir a la ruta</button>
+                `;
+                destinosDiv.appendChild(destinoDiv); // Añadir cada destino a la página
+            });
+        }
+
+        // Ruta almacenada en el localStorage o un array vacío si no existe
+        let ruta = JSON.parse(localStorage.getItem('ruta')) || [];
+
+        // Función para cargar la ruta seleccionada (destinos añadidos) en la parte derecha de la página
+        function cargarRuta() {
+            const detallesRuta = document.getElementById('detallesRuta');
+            detallesRuta.innerHTML = ''; // Limpiar la lista de la ruta
+
+            let totalCoste = 0;
+            let totalDias = 0;
+
+            // Iterar sobre los destinos añadidos en la ruta
+            ruta.forEach((id, index) => {
+                const provincia = provincias.find(p => p.id === id);
+                if (provincia) {
+                    const rutaItem = document.createElement('div');
+                    rutaItem.classList.add('ruta'); // Añadir clase para el estilo
+                    rutaItem.innerHTML = `
+                        <h3>${provincia.nombre}</h3>
+                        <p>Alojamiento: ${provincia.coste_alojamiento} € / noche</p>
+                        <p>Alimentación: ${provincia.coste_alimentacion} € / día</p>
+                        <button class="boton-eliminar" onclick="eliminarDestino(${index})">Eliminar</button>
+                    `;
+                    detallesRuta.appendChild(rutaItem); // Añadir destino a la lista de ruta
+
+                    // Calcular el coste total de alojamiento y alimentación
+                    totalCoste += provincia.coste_alojamiento + provincia.coste_alimentacion;
+                    totalDias++;
+                }
+            });
+
+            // Actualizar los totales de días y coste en la interfaz
+            document.getElementById('totalCoste').textContent = `${totalCoste} €`;
+            document.getElementById('totalDias').textContent = totalDias;
+        }
+
+        // Función para añadir un destino a la ruta
+        function añadirDestino(id) {
+            ruta.push(id); // Añadir el ID del destino a la ruta
+            localStorage.setItem('ruta', JSON.stringify(ruta)); // Guardar la ruta en localStorage
+            cargarRuta(); // Volver a cargar la ruta con el destino añadido
+        }
+
+        // Función para eliminar un destino de la ruta
+        function eliminarDestino(index) {
+            ruta.splice(index, 1); // Eliminar el destino por su índice en el array
+            localStorage.setItem('ruta', JSON.stringify(ruta)); // Guardar los cambios en localStorage
+            cargarRuta(); // Volver a cargar la ruta con el destino eliminado
+        }
+    </script>
+
+</body>
+</html>
